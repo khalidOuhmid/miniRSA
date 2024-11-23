@@ -13,7 +13,12 @@ public class AlgorithmTest {
         PuissanceTest(65, 17, 3233,2790);
     }
 
-    /**ls
+
+    public void TestPgcd(){
+        //PgcdTest();
+    }
+
+    /**
      * Teste l'exponentiation modulaire.
      * 
      * @param message       Le message à chiffrer ou déchiffrer
@@ -29,5 +34,16 @@ public class AlgorithmTest {
         BigInteger result = Algorithm.puissance(a, e, n);
 
         assertEquals(expectedResult, result);
+    }
+
+    public void PgcdTest(int ux, int vx,int expt){
+        BigInteger u = BigInteger.valueOf(ux);
+        BigInteger v = BigInteger.valueOf(vx);
+        BigInteger expectedResult = BigInteger.valueOf(expt);
+
+        BigInteger result = Algorithm.pgcd(u, v);
+        assertEquals(expectedResult,result);
+
+
     }
 }

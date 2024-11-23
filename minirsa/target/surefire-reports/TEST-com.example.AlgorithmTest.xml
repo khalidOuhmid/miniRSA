@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.AlgorithmTest" time="0.016" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.AlgorithmTest" time="0.023" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="FR"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/surefire/surefirebooter15096881686657552674.jar /mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/surefire 2024-11-20T17-16-38_949-jvmRun1 surefire17959732032885162154tmp surefire_016357332816937832472tmp"/>
+    <property name="sun.java.command" value="/mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/surefire/surefirebooter7828857148050977001.jar /mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/surefire 2024-11-22T11-49-57_491-jvmRun1 surefire12063451452346498532tmp surefire_014428970205023719370tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/test-classes:/mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/classes:/mnt/netta/users/kouhmid/.m2/repository/junit/junit/4.11/junit-4.11.jar:/mnt/netta/users/kouhmid/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -27,7 +27,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/surefire/surefirebooter15096881686657552674.jar"/>
+    <property name="surefire.real.class.path" value="/mnt/netta/users/kouhmid/projet/minirsa/minirsa/target/surefire/surefirebooter7828857148050977001.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.5+11-Ubuntu-1ubuntu124.04"/>
     <property name="user.name" value="kouhmid"/>
@@ -53,5 +53,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="TestPuissance" classname="com.example.AlgorithmTest" time="0.003"/>
+  <testcase name="TestPuissance" classname="com.example.AlgorithmTest" time="0.004"/>
 </testsuite>
