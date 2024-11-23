@@ -1,2 +1,4 @@
-com/example/App.class
-main/java/com/example/Algorithm.class
+main\java\com\example\Algorithm.class
+main\java\com\example\IRSA.class
+main\java\com\example\RSA.class
+com\example\App.class

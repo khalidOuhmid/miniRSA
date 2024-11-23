@@ -1,15 +1,18 @@
 package main.java.com.example;
 import java.math.BigInteger;
+
+import javax.swing.ButtonGroup;
 public class Algorithm {
 
         /**
-         * 
-         * @param a
-         * @param e
-         * @param n
-         * @return
+         *  Méthode  pour effectuer l'exponentiation modulaire.
+         *  
+         * @param a La base.
+         * @param e exposant L'exposant.
+         * @param n modulo Le modulo.
+         * @return Le résultat de (base^exposant) % modulo. 
          */
-        public static BigInteger puissance(BigInteger a , BigInteger e, BigInteger n){
+        public static BigInteger puissanceModulaire(BigInteger a , BigInteger e, BigInteger n){
                 BigInteger res = BigInteger.ONE;
                 while(e.compareTo(BigInteger.ZERO) > 0){
                     if( e.mod(BigInteger.TWO).equals(BigInteger.ONE)){
@@ -21,6 +24,13 @@ public class Algorithm {
                 return res;
     
         }
+
+        /**
+         * 
+         * @param u
+         * @param v
+         * @return
+         */
         public static BigInteger pgcd(BigInteger u ,BigInteger v){
 
             while(!v.equals(BigInteger.ZERO)){
@@ -29,6 +39,26 @@ public class Algorithm {
                 v = t.mod(v);
             }
             return u.abs();
+        }
+
+        public static BigInteger bezout(BigInteger a, BigInteger b) {
+            BigInteger x0 = BigInteger.ONE;
+            BigInteger x1 = BigInteger.ZERO;
+        
+            while (!b.equals(BigInteger.ZERO)) {
+                BigInteger quotient = a.divide(b);
+                BigInteger remainder = a.mod(b);
+        
+                a = b;
+                b = remainder;
+        
+                // Mise à jour des coefficients de Bézout
+                BigInteger tempX = x0.subtract(quotient.multiply(x1));
+                x0 = x1;
+                x1 = tempX;
+            }
+        
+            return x0; // Retourne le coefficient associé à "a"
         }
     
     
