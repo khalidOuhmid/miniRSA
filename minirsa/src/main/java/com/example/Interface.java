@@ -23,6 +23,11 @@ public class Interface extends Application {
     private Map<String, Utilisateur> utilisateurs;
     private Map<String, Stage> fenetresUtilisateurs;
 
+      /**
+     * Initialise et affiche la fenêtre principale de l'application.
+     *
+     * @param primaryStage Le stage principal de l'application JavaFX.
+     */
     @Override
     public void start(Stage primaryStage) {
         utilisateurs = new HashMap<>();
@@ -62,6 +67,12 @@ public class Interface extends Application {
         primaryStage.show();
     }
 
+
+    /**
+     * Affiche une boîte de dialogue pour ajouter un nouvel utilisateur.
+     *
+     * @param logArea La zone de texte pour afficher les logs.
+     */
     private void showAddUserDialog(TextArea logArea) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Nouvel utilisateur");
@@ -98,6 +109,12 @@ public class Interface extends Application {
         });
     }
 
+     /**
+     * Crée une nouvelle fenêtre pour un utilisateur.
+     *
+     * @param username Le nom de l'utilisateur.
+     * @param logArea La zone de texte pour afficher les logs.
+     */
     private void createUserWindow(String username, TextArea logArea) {
         Stage userStage = new Stage();
         userStage.setTitle("Utilisateur: " + username);
@@ -172,12 +189,27 @@ public class Interface extends Application {
         });
     }
     
+
+    
+    /**
+     * Affiche une alerte 
+     *
+     * @param title Le titre de l'alerte.
+     * @param content Le contenu de l'alerte.
+     */
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    /**
+     * Met à jour la liste des destinataires possibles pour un utilisateur.
+     *
+     * @param recipientBox La ComboBox contenant la liste des destinataires.
+     * @param currentUser Le nom de l'utilisateur actuel.
+     */
     private void updateRecipientList(ComboBox<String> recipientBox, String currentUser) {
         recipientBox.getItems().clear();
         for (String user : utilisateurs.keySet()) {
@@ -187,11 +219,14 @@ public class Interface extends Application {
         }
     }
     
+     /**
+     * Met à jour les listes de destinataires pour tous les utilisateurs.
+     */
     private void updateAllRecipientLists() {
         for (Stage stage : fenetresUtilisateurs.values()) {
             VBox layout = (VBox) stage.getScene().getRoot();
             ComboBox<String> recipientBox = (ComboBox<String>) layout.getChildren().get(3);
-            String currentUser = stage.getTitle().substring(12); // Enlever "Utilisateur: "
+            String currentUser = stage.getTitle().substring(12); 
             updateRecipientList(recipientBox, currentUser);
         }
     }

@@ -42,7 +42,7 @@ public class Utilisateur extends Thread {
             }
         }
     }
-
+    
     public void envoyerMessage(String contenu, Utilisateur destinataire) {
         try {
             BigInteger messageChiffre = RsaTextConverter.chiffrer(contenu, 

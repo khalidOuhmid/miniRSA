@@ -5,6 +5,8 @@ import java.math.BigInteger;
 public class RsaTextConverter {
     /**
      * Convertit une chaîne de caractères en BigInteger
+     * @param message
+     * @return
      */
     private static BigInteger strToInt(String message) {
         BigInteger result = BigInteger.ZERO;
@@ -20,6 +22,8 @@ public class RsaTextConverter {
 
     /**
      * Convertit un BigInteger en chaîne de caractères
+     * @param number
+     * @return
      */
     private static String intToStr(BigInteger number) {
         StringBuilder result = new StringBuilder();
@@ -36,6 +40,10 @@ public class RsaTextConverter {
 
     /**
      * Chiffre un message texte
+     * @param message message
+     * @param e exposant publique 
+     * @param n modulo
+     * @return
      */
     public static BigInteger chiffrer(String message, BigInteger e, BigInteger n) {
         BigInteger messageInt = strToInt(message);
@@ -47,6 +55,10 @@ public class RsaTextConverter {
 
     /**
      * Déchiffre un message chiffré en texte
+     * @param messageChiffre message à déchiffrer
+     * @param d clé privée
+     * @param n modulo
+     * @return
      */
     public static String dechiffrer(BigInteger messageChiffre, BigInteger d, BigInteger n) {
         BigInteger messageInt = Algorithm.puissanceModulaire(messageChiffre, d, n);
@@ -55,6 +67,10 @@ public class RsaTextConverter {
 
     /**
      * Signe un message texte
+     * @param message message à signer
+     * @param clePrivee 
+     * @param modulo
+     * @return
      */
     public static BigInteger signer(String message, BigInteger clePrivee, BigInteger modulo) {
         BigInteger hash = Hash.Hashage(message);
@@ -63,6 +79,11 @@ public class RsaTextConverter {
 
     /**
      * Vérifie la signature d'un message texte
+     * @param message
+     * @param signature
+     * @param clePublique
+     * @param modulo
+     * @return
      */
     public static boolean verifier(String message, BigInteger signature, 
                                  BigInteger clePublique, BigInteger modulo) {
