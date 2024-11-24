@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.AlgorithmTest" time="0.017" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.CertificatTest" time="0.088" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,7 +58,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="TestPuissanceModulaire" classname="com.example.AlgorithmTest" time="0.01"/>
-  <testcase name="TestPgcd" classname="com.example.AlgorithmTest" time="0.001"/>
-  <testcase name="TestBezout" classname="com.example.AlgorithmTest" time="0"/>
+  <testcase name="TestGenererCertificat" classname="com.example.CertificatTest" time="0.073"/>
+  <testcase name="TestVerifierCertificat" classname="com.example.CertificatTest" time="0.015"/>
 </testsuite>

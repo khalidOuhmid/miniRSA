@@ -3,45 +3,35 @@ package main.java.com.example;
 import java.math.BigInteger;
 
 public class Certificat {
-
-    /**
-     * 
-     * @param identite
-     * @param e
-     * @param n
-     * @param clePrivee
-     * @param modulo
-     * @return
-     */
-    public static String genererCertificat(String identite, BigInteger e, BigInteger n,BigInteger clePrivee, BigInteger modulo) {
-        String message = identite + ":" + e.toString() + ":" + n.toString();
-        BigInteger hashMessage = HashUtil.hash(message);
-
-        BigInteger signatureCA = Algorithm.puissanceModulaire(hashMessage, clePrivee, modulo);
-
-        return message + ":" + signatureCA.toString();
+    public static String genererCertificat(String identite, BigInteger e, BigInteger n, 
+                                         BigInteger clePrivee, BigInteger modulo) {
+        // Construction de la partie non signée
+        String nonSignedPart = identite + ":" + e.toString() + ":" + n.toString();
+        
+        // Utilisation directe de la méthode signer de la classe Signature
+        BigInteger signature = Signature.signer(nonSignedPart, clePrivee, modulo);
+        
+        // Construction du certificat complet
+        return nonSignedPart + ":" + signature.toString();
     }
 
-    /**
-     * 
-     * @param certificat
-     * @param clePublique
-     * @param moduloRSA
-     * @return
-     */
-    public static boolean verifierCertificat(String certificat, BigInteger clePublique, BigInteger moduloRSA) {
-        String[] parts = certificat.split(":");
-        if (parts.length != 4) return false;
+    public static boolean verifierCertificat(String certificat, BigInteger clePublique, 
+                                           BigInteger moduloRSA) {
+        try {
+            String[] parts = certificat.split(":");
+            if (parts.length != 4) {
+                return false;
+            }
 
-        String identity = parts[0];
-        BigInteger e = new BigInteger(parts[1]);
-        BigInteger n = new BigInteger(parts[2]);
-        BigInteger signatureCA = new BigInteger(parts[3]);
-
-        String messageOriginal = identity + ":" + e.toString() + ":" + n.toString();
-        BigInteger hashOriginal = Hash.Hashage(messageOriginal);
-        BigInteger hashDecriptee = Algorithm.puissanceModulaire(signatureCA, clePublique, moduloRSA);
-
-        return hashOriginal.equals(hashDecriptee);
+            // Reconstruction de la partie non signée
+            String nonSignedPart = parts[0] + ":" + parts[1] + ":" + parts[2];
+            BigInteger signature = new BigInteger(parts[3]);
+            
+            // Utilisation directe de la méthode verifier de la classe Signature
+            return Signature.verifier(nonSignedPart, signature, clePublique, moduloRSA);
+            
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
     }
 }

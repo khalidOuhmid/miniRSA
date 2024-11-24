@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.example.AlgorithmTest
+Test set: com.example.CertificatTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s - in com.example.AlgorithmTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 s - in com.example.CertificatTest

@@ -12,18 +12,26 @@ public class Algorithm {
          * @param n modulo Le modulo.
          * @return Le résultat de (base^exposant) % modulo. 
          */
-        public static BigInteger puissanceModulaire(BigInteger a , BigInteger e, BigInteger n){
-                BigInteger res = BigInteger.ONE;
-                while(e.compareTo(BigInteger.ZERO) > 0){
-                    if( e.mod(BigInteger.TWO).equals(BigInteger.ONE)){
-                        res = res.multiply(a).mod(n);
-                    }
-                        a = a.multiply(a).mod(n);
-                        e = e.divide(BigInteger.TWO);
+        public static BigInteger puissanceModulaire(BigInteger a, BigInteger e, BigInteger n) {
+            if (n.compareTo(BigInteger.ZERO) <= 0) {
+                throw new IllegalArgumentException("Le modulo n doit être positif.");
+            }
+        
+            // Initialisation du résultat à 1
+            BigInteger res = BigInteger.ONE;
+            a = a.mod(n);
+            while (e.compareTo(BigInteger.ZERO) > 0) {
+                if (e.mod(BigInteger.TWO).equals(BigInteger.ONE)) {
+                    res = res.multiply(a).mod(n);
                 }
-                return res;
-    
+                a = a.multiply(a).mod(n);
+        
+                e = e.divide(BigInteger.TWO);
+            }
+        
+            return res;
         }
+        
 
         /**
          * 
