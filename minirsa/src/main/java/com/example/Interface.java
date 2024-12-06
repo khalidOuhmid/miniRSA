@@ -1,6 +1,5 @@
 package main.java.com.example;
 
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -9,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
-import main.java.com.example.Utilisateur;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ButtonType;
@@ -18,36 +16,34 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.application.Platform;
+import javafx.scene.Node;
 
 public class Interface extends Application {
     private Map<String, Utilisateur> utilisateurs;
     private Map<String, Stage> fenetresUtilisateurs;
+    private TextArea logArea;
+    private String caCertificat;
+    private Map<String, Map<String, String>> certificatsVerifies;
 
-      /**
-     * Initialise et affiche la fenêtre principale de l'application.
-     *
-     * @param primaryStage Le stage principal de l'application JavaFX.
-     */
     @Override
     public void start(Stage primaryStage) {
         utilisateurs = new HashMap<>();
         fenetresUtilisateurs = new HashMap<>();
+        certificatsVerifies = new HashMap<>();
         primaryStage.setTitle("MiniRSA Communication");
-
         VBox mainLayout = new VBox(10);
         mainLayout.setPadding(new Insets(10));
-
-        TextArea logArea = new TextArea();
+        logArea = new TextArea();
         logArea.setEditable(false);
         logArea.setPrefRowCount(10);
-
         Button addUserButton = new Button("Ajouter un utilisateur");
         Button showUsersButton = new Button("Liste des utilisateurs");
         TextArea userListArea = new TextArea();
         userListArea.setEditable(false);
         userListArea.setPrefRowCount(5);
 
-        addUserButton.setOnAction(e -> showAddUserDialog(logArea));
+        addUserButton.setOnAction(e -> showAddUserDialog());
         showUsersButton.setOnAction(e -> {
             userListArea.clear();
             utilisateurs.keySet().forEach(username -> userListArea.appendText(username + "\n"));
@@ -65,19 +61,26 @@ public class Interface extends Application {
         Scene scene = new Scene(mainLayout, 400, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        initializeCA();
     }
 
+    private void initializeCA() {
+        try {
+            CertificatAutorite ca = new CertificatAutorite(logArea);
+            caCertificat = ca.getCaCertificat();
+        } catch (Exception e) {
+            if (logArea != null) {
+                Platform.runLater(() -> logArea.appendText("Erreur lors de la génération du certificat CA : " + e.getMessage() + "\n"));
+            }
+            e.printStackTrace();
+        }
+    }
 
-    /**
-     * Affiche une boîte de dialogue pour ajouter un nouvel utilisateur.
-     *
-     * @param logArea La zone de texte pour afficher les logs.
-     */
-    private void showAddUserDialog(TextArea logArea) {
+    private void showAddUserDialog() {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Nouvel utilisateur");
         dialog.setHeaderText("Entrez le nom de l'utilisateur");
-
         ButtonType buttonTypeOk = new ButtonType("Créer", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, ButtonType.CANCEL);
 
@@ -102,23 +105,16 @@ public class Interface extends Application {
 
         dialog.showAndWait().ifPresent(userName -> {
             if (!userName.isEmpty() && !utilisateurs.containsKey(userName)) {
-                createUserWindow(userName, logArea);
+                createUserWindow(userName);
             } else {
                 showAlert("Erreur", "Nom d'utilisateur invalide ou déjà utilisé");
             }
         });
     }
 
-     /**
-     * Crée une nouvelle fenêtre pour un utilisateur.
-     *
-     * @param username Le nom de l'utilisateur.
-     * @param logArea La zone de texte pour afficher les logs.
-     */
-    private void createUserWindow(String username, TextArea logArea) {
+    private void createUserWindow(String username) {
         Stage userStage = new Stage();
         userStage.setTitle("Utilisateur: " + username);
-
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(10));
 
@@ -135,17 +131,19 @@ public class Interface extends Application {
 
         Button sendButton = new Button("Envoyer");
 
-        // Créer l'utilisateur et son thread
         Utilisateur user = new Utilisateur(username, messageArea);
         utilisateurs.put(username, user);
         fenetresUtilisateurs.put(username, userStage);
         user.start();
 
-        // Log de la création de l'utilisateur et de ses clés
-        logArea.appendText("=== Création de l'utilisateur " + username + " ===\n");
-        logArea.appendText("Génération des clés RSA...\n");
-        logArea.appendText("Clé publique: " + user.getKeyPair().getPublicKey() + "\n");
-        logArea.appendText("Modulo: " + user.getKeyPair().getModulus() + "\n\n");
+        updateAllRecipientLists();
+
+        Platform.runLater(() -> {
+            logArea.appendText("=== Création de l'utilisateur " + username + " ===\n");
+            logArea.appendText("Génération des clés RSA...\n");
+            logArea.appendText("Clé publique: " + user.getKeyPair().getPublicKey() + "\n");
+            logArea.appendText("Modulo: " + user.getKeyPair().getModulus() + "\n\n");
+        });
 
         sendButton.setOnAction(e -> {
             String recipient = recipientBox.getValue();
@@ -153,13 +151,34 @@ public class Interface extends Application {
             if (recipient != null && !message.isEmpty()) {
                 Utilisateur destinataire = utilisateurs.get(recipient);
                 if (destinataire != null) {
-                    // Log des étapes de chiffrement et signature
-                    logArea.appendText("=== Envoi de message de " + username + " à " + recipient + " ===\n");
-                    logArea.appendText("1. Message original: " + message + "\n");
-                    logArea.appendText("2. Calcul de l'empreinte...\n");
-                    logArea.appendText("3. Signature du message...\n");
-                    logArea.appendText("4. Chiffrement du message...\n");
-                    logArea.appendText("5. Message envoyé\n\n");
+                    Platform.runLater(() -> {
+                        logArea.appendText("=== Envoi de message de " + username + " à " + recipient + " ===\n");
+                        logArea.appendText("1. Message original: " + message + "\n");
+                        logArea.appendText("2. Calcul de l'empreinte...\n");
+                        logArea.appendText("3. Signature du message...\n");
+                        logArea.appendText("4. Chiffrement du message...\n");
+                        logArea.appendText("5. Vérification du certificat du destinataire...\n");
+                        logArea.appendText("6. Message envoyé\n\n");
+                    });
+
+                    if (!destinataire.isCertificatVerified()) {
+                        try {
+                            boolean certificatValide = Certificat.verifierCertificat(destinataire.getCertificat());
+                            if (certificatValide) {
+                                destinataire.setCertificatVerified(true);
+                                certificatsVerifies.put(username, new HashMap<>());
+                                certificatsVerifies.get(username).put(recipient, destinataire.getCertificat());
+                                Platform.runLater(() -> logArea.appendText("Certificat du destinataire vérifié avec succès.\n"));
+                            } else {
+                                Platform.runLater(() -> logArea.appendText("Le certificat du destinataire n'est pas valide.\n"));
+                                return;
+                            }
+                        } catch (Exception ex) {
+                            Platform.runLater(() -> logArea.appendText("Erreur lors de la vérification du certificat du destinataire : " + ex.getMessage() + "\n"));
+                            ex.printStackTrace();
+                            return;
+                        }
+                    }
 
                     user.envoyerMessage(message, destinataire);
                     messageField.clear();
@@ -185,51 +204,43 @@ public class Interface extends Application {
             utilisateurs.remove(username);
             fenetresUtilisateurs.remove(username);
             updateAllRecipientLists();
-            logArea.appendText("=== Déconnexion de " + username + " ===\n\n");
+            Platform.runLater(() -> logArea.appendText("=== Déconnexion de " + username + " ===\n\n"));
         });
     }
-    
 
-    
-    /**
-     * Affiche une alerte 
-     *
-     * @param title Le titre de l'alerte.
-     * @param content Le contenu de l'alerte.
-     */
+    private void updateAllRecipientLists() {
+        for (Map.Entry<String, Stage> entry : fenetresUtilisateurs.entrySet()) {
+            Stage stage = entry.getValue();
+            if (stage != null && stage.getScene() != null) {
+                VBox layout = (VBox) stage.getScene().getRoot();
+                if (layout != null && layout.getChildren().size() > 3) {
+                    Node node = layout.getChildren().get(3);
+                    if (node instanceof ComboBox) {
+                        ComboBox<String> recipientBox = (ComboBox<String>) node;
+                        String currentUser = entry.getKey();
+                        updateRecipientList(recipientBox, currentUser);
+                    }
+                }
+            }
+        }
+    }
+
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
         alert.setContentText(content);
         alert.showAndWait();
     }
 
-    /**
-     * Met à jour la liste des destinataires possibles pour un utilisateur.
-     *
-     * @param recipientBox La ComboBox contenant la liste des destinataires.
-     * @param currentUser Le nom de l'utilisateur actuel.
-     */
     private void updateRecipientList(ComboBox<String> recipientBox, String currentUser) {
+        if (recipientBox == null || utilisateurs == null) {
+            return;
+        }
         recipientBox.getItems().clear();
         for (String user : utilisateurs.keySet()) {
-            if (!user.equals(currentUser)) {
+            if (user != null && !user.equals(currentUser)) {
                 recipientBox.getItems().add(user);
             }
         }
     }
-    
-     /**
-     * Met à jour les listes de destinataires pour tous les utilisateurs.
-     */
-    private void updateAllRecipientLists() {
-        for (Stage stage : fenetresUtilisateurs.values()) {
-            VBox layout = (VBox) stage.getScene().getRoot();
-            ComboBox<String> recipientBox = (ComboBox<String>) layout.getChildren().get(3);
-            String currentUser = stage.getTitle().substring(12); 
-            updateRecipientList(recipientBox, currentUser);
-        }
-    }
-    
-    
 }

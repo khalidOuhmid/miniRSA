@@ -1,6 +1,9 @@
 package main.java.com.example;
 
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class Signature {
     /**
