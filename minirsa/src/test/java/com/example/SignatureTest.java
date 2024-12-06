@@ -14,7 +14,6 @@ public class SignatureTest {
     @RepeatedTest(100) // Exécute le test 100 fois
     public void testSignerEtVerifier() {
         // Génération des clés RSA
-        RSA rsa = new RSA();
         RSAKeyPair keyPair = RSA.genererCle(1024);
         BigInteger clePub = keyPair.getPublicKey();
         BigInteger clePrive = keyPair.getPrivateKey();

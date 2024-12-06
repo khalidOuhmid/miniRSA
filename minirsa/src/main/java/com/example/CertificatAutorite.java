@@ -19,6 +19,11 @@ public class CertificatAutorite {
         Certificat.CA = this;
         initializeCA();
     }
+    public CertificatAutorite(){
+        this.running = true;
+        Certificat.CA = this;
+        initializeCA();
+    }
 
     private void initializeCA() {
     

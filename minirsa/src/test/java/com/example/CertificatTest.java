@@ -1,4 +1,5 @@
 package com.example;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,15 +12,15 @@ import java.math.BigInteger;
 public class CertificatTest {
 
     @Test
-    public void TestGenererCertificat() {
+    public void testGenererCertificat() {
         // Génération des clés RSA
         RSAKeyPair keyPair = RSA.genererCle(1024);
         BigInteger clePublique = keyPair.getPublicKey();
         BigInteger clePrivee = keyPair.getPrivateKey();
         BigInteger modulo = keyPair.getModulus();
-
+        
         // Cas 1 : Vérification avec des valeurs valides
-        GenererCertificatTest(
+        genererCertificatTest(
             "Alice",
             clePublique,
             modulo,
@@ -29,7 +30,7 @@ public class CertificatTest {
         );
 
         // Cas 2 : Vérification avec une identité vide
-        GenererCertificatTest(
+        genererCertificatTest(
             "",
             clePublique,
             modulo,
@@ -39,16 +40,16 @@ public class CertificatTest {
         );
     }
 
-    public void GenererCertificatTest(String identite, BigInteger e, BigInteger n, 
+    private void genererCertificatTest(String identite, BigInteger e, BigInteger n, 
                                     BigInteger clePrivee, BigInteger modulo, String expectedPart) {
-        String certificat = Certificat.genererCertificat(identite, e, n, clePrivee, modulo);
+        String certificat = Certificat.genererCertificat(identite, e, n);
         assertTrue(certificat.startsWith(expectedPart), "Le certificat ne commence pas par la partie attendue.");
         String[] parts = certificat.split(":");
         assertEquals(4, parts.length, "Le certificat doit contenir 4 parties.");
     }
 
     @Test
-    public void TestVerifierCertificat() {
+    public void testVerifierCertificat() {
         // Génération des clés RSA
         RSAKeyPair keyPair = RSA.genererCle(1024);
         BigInteger clePublique = keyPair.getPublicKey();
@@ -59,40 +60,31 @@ public class CertificatTest {
         String certificatValide = Certificat.genererCertificat(
             "Alice", 
             clePublique, 
-            modulo, 
-            clePrivee, 
             modulo
         );
 
         // Cas 1 : Certificat valide
-        VerifierCertificatTest(
+        verifierCertificatTest(
             certificatValide,
-            clePublique,
-            modulo,
             true
         );
 
         // Cas 2 : Certificat invalide (mauvaise signature)
         String certificatInvalide = certificatValide.substring(0, certificatValide.lastIndexOf(':') + 1) + "1234";
-        VerifierCertificatTest(
+        verifierCertificatTest(
             certificatInvalide,
-            clePublique,
-            modulo,
             false
         );
 
         // Cas 3 : Certificat mal formé
-        VerifierCertificatTest(
+        verifierCertificatTest(
             "Alice:" + clePublique + ":" + modulo,
-            clePublique,
-            modulo,
             false
         );
     }
 
-    public void VerifierCertificatTest(String certificat, BigInteger clePublique, 
-                                     BigInteger moduloRSA, boolean expectedValid) {
-        boolean isValid = Certificat.verifierCertificat(certificat, clePublique, moduloRSA);
+    private void verifierCertificatTest(String certificat, boolean expectedValid) {
+        boolean isValid = Certificat.verifierCertificat(certificat);
         assertEquals(expectedValid, isValid);
     }
 }

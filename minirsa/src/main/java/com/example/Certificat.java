@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class Certificat {
-    public static CertificatAutorite CA;
+    public static CertificatAutorite CA = new CertificatAutorite();
 
     /**
      * Génère un certificat pour un utilisateur.

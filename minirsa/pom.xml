@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:noNamespaceSchemaLocation="http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
@@ -49,8 +48,25 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <!-- Plugin for compiling Java code -->
+            <plugins>
+                <!-- Plugin for compiling Java code -->
+                            <plugin>
+                    <groupId>org.skife.maven</groupId>
+                    <artifactId>really-executable-jar-maven-plugin</artifactId>
+                    <version>1.5.0</version>
+                    <configuration>
+                        <flags>-Xmx1G</flags>
+                        <programFile>${project.artifactId}</programFile>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>really-executable-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
