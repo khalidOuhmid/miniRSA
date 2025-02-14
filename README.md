@@ -5,9 +5,6 @@ Development of a secure messaging application implementing RSA encryption, digit
 ## Authors
 
 - [@khalidouhmid](https://github.com/khalidOuhmid)
-- [@matchabrier](https://gitlab-ce.iut.u-bordeaux.fr/matchabrier)
-- [@dlecoq](https://gitlab-ce.iut.u-bordeaux.fr/dlecoq)
-
 
 ## Usage/Examples
 
